@@ -4,9 +4,6 @@ import Product from '../dao/models/product.model.js';
 
 const router = Router();
 
-// const filePathProducts = './src/productos.json';
-// const filePathCarts = './src/carrito.json';
-
 router.get('/', async (req, res) => {
     try {
         const carts = await Cart.find().lean().exec();
@@ -35,7 +32,6 @@ router.get('/:cid', async (req, res) => {
 
       res.status(200).json(productsWithInfo);
 
-      // res.status(200).json(cart.products);
     } catch (error) {
       console.log('Error al obtener los productos del carrito:', error);
       res.status(500).json({ error: 'Error en el servidor' });
@@ -96,7 +92,6 @@ router.post('/:cid/product/:pid', async (req, res) => {
     }
   });
 
-// PUT api/carts/:cid deberá actualizar el carrito con un arreglo de productos con el formato especificado arriba.
 router.put('/:cid', async (req, res) => {
   try {
       const cartId = req.params.cid;
@@ -118,7 +113,6 @@ router.put('/:cid', async (req, res) => {
   }
 });
 
-// PUT api/carts/:cid/products/:pid deberá poder actualizar SÓLO la cantidad de ejemplares del producto por cualquier cantidad pasada desde req.body
 router.put('/:cid/products/:pid', async (req, res) => {
   try {
       const cartId = req.params.cid;

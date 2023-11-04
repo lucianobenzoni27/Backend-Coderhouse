@@ -2,9 +2,7 @@ import { Router } from "express";
 import fs from 'fs';
 import Product from '../dao/models/product.model.js';
 import { paginate } from "mongoose-paginate-v2";
-
 const router = Router();
-
 const filePathProducts = './src/productos.json';
 
 router.get('/', async (req, res) => {
@@ -15,14 +13,6 @@ router.get('/', async (req, res) => {
     const page = req.query.page || 1
     const filterOptions = {}
 
-    // const products = await Product.find().limit(limit).lean().exec();
-    // //const products = JSON.parse(data);
-    // if (!limit) {
-    //   res.status(200).json({ products });
-    // } else {
-    //   const productsLimit = products.slice(0, limit);
-    //   res.status(200).json({ products: productsLimit });
-    // }
 
     if (req.query.stock) filterOptions.stock = req.query.stock
     if (req.query.category) filterOptions.category = req.query.category
