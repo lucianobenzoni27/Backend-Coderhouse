@@ -1,7 +1,7 @@
 {
-  "name": "desafio-estrategias-de-autenticacion",
+  "name": "desafio-refactor-a-nuestro-login",
   "version": "1.0.0",
-  "description": "desafio de estrategias de autenticacion",
+  "description": "desafio refactor a nuestro login",
   "main": "src/app.js",
   "type": "module",
   "scripts": {
