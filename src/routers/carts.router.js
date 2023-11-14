@@ -53,6 +53,10 @@ router.post('/:cid/product/:pid', async (req, res) => {
     try {
       const cartId = req.params.cid;
       const productId = req.params.pid;
+
+
+      const userId = req.session.user._id; 
+      const user = await User.findById(userId);
   
       const product = await Product.findById(productId).lean().exec();
   
@@ -84,6 +88,12 @@ router.post('/:cid/product/:pid', async (req, res) => {
       }
   
       await Cart.findByIdAndUpdate(cartId, { products: cart.products }).exec();
+
+      user.cart.products.push({
+        product: productId,
+        quantity: 1
+      });
+      await user.save();
   
       res.status(201).json(cart);
     } catch (error) {
@@ -158,7 +168,6 @@ router.delete('/:cid', async (req, res) => {
           return;
       }
 
-      // Vaciar el array de productos del carrito
       cart.products = [];
 
       await Cart.findByIdAndUpdate(cartId, { products: cart.products }).exec();
@@ -170,7 +179,6 @@ router.delete('/:cid', async (req, res) => {
   }
 });
 
-  // DELETE api/carts/:cid/products/:pid deberá eliminar del carrito el producto seleccionado.
 router.delete('/:cid/products/:pid', async (req, res) => {
   try {
       const cartId = req.params.cid;
@@ -183,7 +191,6 @@ router.delete('/:cid/products/:pid', async (req, res) => {
           return;
       }
 
-      // Filtrar los productos y eliminar el producto específico del carrito
       cart.products = cart.products.filter((item) => item.product.toString() !== productId);
 
       await Cart.findByIdAndUpdate(cartId, { products: cart.products }).exec();

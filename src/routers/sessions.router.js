@@ -1,18 +1,32 @@
 import { Router } from "express";
 import passport from 'passport';
-
+import Cart from '../dao/models/cart.model.js'
 
 const router = Router();
 
-router.post('/register', (req, res, next) => {
-    passport.authenticate('register', (err, user, info) => {
+router.post('/register', async (req, res, next) => {
+    passport.authenticate('register', async (err, user, info) => {
       if (err) {
         return res.status(500).json({ error: 'Failed to register' });
       }
       if (!user) {
         return res.status(400).json({ error: 'Failed to register' });
       }
-      return res.status(200).json({ message: 'Registration successful' });
+      try {
+        const newCart = await Cart.create({ products: [] });
+
+        user.cart = newCart._id;
+        await user.save();
+
+        req.login(user, (err) => {
+            if (err) {
+                return next(err);
+            }
+            return res.status(200).json({ message: 'Registration and login successful' });
+        });
+    } catch (error) {
+        return res.status(500).json({ error: 'Failed to register' });
+    }
     })(req, res, next);
   });
 
@@ -43,5 +57,23 @@ router.get('/githubcallback', passport.authenticate('github', { failureRedirect:
     console.log('User session: ', req.session.user)
     res.redirect('/');
 })
+
+router.get('/current', (req, res) => {
+  if (req.isAuthenticated()) {
+    const user = {
+      _id: req.user._id,
+      first_name: req.user.first_name,
+      last_name: req.user.last_name,
+      email: req.user.email,
+      age: req.user.age,
+      cart: req.user.cart,
+      role: req.user.role
+    };
+    console.log('User: ', user)
+    res.status(200).json(user);
+  } else {
+    res.status(401).json({ error: 'No autorizado' });
+  }
+});
 
 export default router;

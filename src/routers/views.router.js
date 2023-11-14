@@ -8,7 +8,6 @@ const router = Router();
 
 router.get('/', isAuthenticated, async (req, res) => {
     try {
-      //const products = await ProductModel.find().lean().exec();
       let pageNum = parseInt(req.query.page) || 1;
       let itemsPorPage = parseInt(req.query.limit) || 10;
       const products = await ProductModel.paginate({}, { page: pageNum , limit: itemsPorPage , lean:true });
@@ -16,9 +15,6 @@ router.get('/', isAuthenticated, async (req, res) => {
       products.prevLink = products.hasPrevPage ? `/products?limit=${itemsPorPage}&page=${products.prevPage}` : '';
       products.nextLink = products.hasNextPage ? `/products?limit=${itemsPorPage}&page=${products.nextPage}` : '';
       
-      // console.log(products);
-      
-      // Obtener los datos del usuario desde la sesión
       const userInfo = {
         first_name: req.session.user.first_name,
         last_name: req.session.user.last_name,
@@ -27,7 +23,6 @@ router.get('/', isAuthenticated, async (req, res) => {
         role: req.session.user.role,
       };
       
-      // Renderizar la vista de productos y pasar los datos del usuario
       res.render('home', { ...products, userInfo });
     } catch (error) {
       console.log('Error al leer los productos:', error);
@@ -59,7 +54,6 @@ router.get('/', isAuthenticated, async (req, res) => {
   })
 
   router.get('/carts/:cid', isAuthenticated, async (req, res) => {
-    // ID del carrito: 64a36d28ae5981f3f6e4488e
     try {
       const id = req.params.cid
       const result = await cartModel.findById(id).lean().exec();

@@ -43,10 +43,7 @@ const initializePassport = () => {
             age: newUser.age,
             role: newUser.role
         }
-
-        // Almacenar toda la información del usuario en la sesión
-        // req.session.user = userNew;
-
+        
         return done(null, newUser);
       } catch (error) {
         console.log(error.message);

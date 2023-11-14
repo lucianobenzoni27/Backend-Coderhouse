@@ -1,5 +1,5 @@
-let socket = io() // instancia de socket.io en el cliente
-const table = document.getElementById('realProductsTable') // referencia a la tabla de productos
+let socket = io() 
+const table = document.getElementById('realProductsTable') 
 
 document.getElementById('createBtn').addEventListener('click', () => {
     const body = {
@@ -9,32 +9,32 @@ document.getElementById('createBtn').addEventListener('click', () => {
         code: document.getElementById('code').value,
         stock: document.getElementById('stock').value,
         category: document.getElementById('category').value,
-    } // crea un objeto con los datos del formulario
+    } 
     fetch('/api/products', {
-        method: 'POST', // método HTTP
-        body: JSON.stringify(body), // cuerpo de la request
+        method: 'POST', 
+        body: JSON.stringify(body), 
         headers: {
             'Content-Type': 'application/json'
-        }, // cabecera de la request
-    }) // fetch para crear un producto
-    .then(result => result.json()) // parsea el resultado a JSON
+        }, 
+    }) /
+    .then(result => result.json()) 
     .then(result => {
         if (result.status === 'error') throw new Error(result.error)
-    }) // si el resultado es un error, lanza una excepción
-    .then(() => fetch('/api/products?limit=10000')) // si no hubo error, hace un fetch para obtener la lista de productos
-    .then(result => result.json()) // parsea el resultado a JSON
+    }) 
+    .then(() => fetch('/api/products?limit=10000')) 
+    .then(result => result.json()) 
     .then(result => {
         if (result.status === 'error') throw new Error(result.error)
-        else socket.emit('productList', result.payload) // si no hubo error, emite el evento productList con la lista de productos
+        else socket.emit('productList', result.payload) 
         alert('Producto creado con éxito!')
-        document.getElementById('title').value = '' // limpia los campos del formulario
+        document.getElementById('title').value = '' 
         document.getElementById('description').value = ''
         document.getElementById('price').value = ''
         document.getElementById('code').value = ''
         document.getElementById('stock').value = ''
         document.getElementById('category').value = ''
-    }) // si el resultado es un error, lanza una excepción, si no, emite el evento productList con la lista de productos
-    .catch(error => alert(`Ocurrio un error : ${error}`)) // si hubo un error, muestra un alert con el error
+    }) 
+    .catch(error => alert(`Ocurrio un error : ${error}`)) 
 })
 
 deleteProduct = (id) => {
@@ -61,7 +61,7 @@ deleteProduct = (id) => {
 socket.on('updatedProducts', data => {
     console.log(data)
     const tbody = table.getElementsByTagName('tbody')[0];
-    tbody.innerHTML = ''; // Eliminar los elementos antiguos de la tabla
+    tbody.innerHTML = ''; 
 
     for (const product of data) {
         const tr = document.createElement('tr');
